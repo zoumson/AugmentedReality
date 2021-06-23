@@ -6,15 +6,15 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/calib3d.hpp>
-
+/*
 using namespace cv;
 using namespace aruco;
 using namespace std;
-
+*/
 int main(int argc, char** argv)
 {
 
-   String keys =
+   cv::String keys =
         "{o option |<none>           | 1 input is an image, 2 input is a video}" 
         "{i image |           | old image path}"                           
         "{n new |./resource/image/new_scenery.jpg        | new image path}"                           
@@ -23,7 +23,7 @@ int main(int argc, char** argv)
         "{q out |./result/video/output.avi           | output video}"                                                                                                            
         "{help h usage ?    |      | show help message}";      
   
-    CommandLineParser parser(argc, argv, keys);
+    cv::CommandLineParser parser(argc, argv, keys);
     parser.about("Augmented Reality");
     if (parser.has("help")) 
     {
@@ -31,11 +31,11 @@ int main(int argc, char** argv)
         return 0;
     }
     int option = parser.get<int>("option");
-    String old = parser.get<String>("image"); 
-    String newImage = parser.get<String>("new"); 
-    String videoPath = parser.get<String>("video"); 
-    String output = parser.get<String>("output"); 
-    String out = parser.get<String>("out"); 
+    cv::String old = parser.get<cv::String>("image"); 
+    cv::String newImage = parser.get<cv::String>("new"); 
+    cv::String videoPath = parser.get<cv::String>("video"); 
+    cv::String output = parser.get<cv::String>("output"); 
+    cv::String out = parser.get<cv::String>("out"); 
 
  
     if (!parser.check()) 
@@ -44,7 +44,7 @@ int main(int argc, char** argv)
         return -1;
     }
     // store image/video to process
-    String str, outputFile;
+    cv::String str, outputFile;
 
     switch (option)
     {
@@ -67,63 +67,66 @@ int main(int argc, char** argv)
         outputFile = out;
         break;
     default:
-        cout <<"Please insert a choice again.\n";
+        std::cout <<"Please insert a choice again.\n";
         break;
     }
 
     // Open a video file or an image file or a camera stream.
     //string str, outputFile;
-    VideoCapture cap;
-    VideoWriter video;
-    Mat frame, blob;
+    cv::VideoCapture cap;
+    cv::VideoWriter video;
+    cv::Mat frame, blob;
     
-    //Mat im_src = imread("new_scenery.jpg");
-    Mat im_src = imread(newImage);
+    //cv::Mat im_src = imread("new_scenery.jpg");
+    cv::Mat im_src = cv::imread(newImage);
 
     // Get the video writer initialized to save the output video
     cap.open(str);
-    if (!parser.has("image")) {
-        video.open(outputFile, VideoWriter::fourcc('M','J','P','G'), 28, Size(2*cap.get(CAP_PROP_FRAME_WIDTH), cap.get(CAP_PROP_FRAME_HEIGHT)));
+    if (!parser.has("image")) 
+    {
+        video.open(outputFile, cv::VideoWriter::fourcc('M','J','P','G'), 
+        28, cv::Size(2*cap.get(cv::CAP_PROP_FRAME_WIDTH), cap.get(cv::CAP_PROP_FRAME_HEIGHT)));
     }
     
     // Create a window
-    static const string kWinName = "Augmented Reality using Aruco markers in OpenCV";
-    namedWindow(kWinName, WINDOW_NORMAL);
+    static const std::string kWinName = "Augmented Reality using Aruco markers in OpenCV";
+    cv::namedWindow(kWinName, cv::WINDOW_NORMAL);
 
     // Process frames.
-    while (waitKey(1) < 0)
+    while (cv::waitKey(1) < 0)
     {
         // get frame from the video
         cap >> frame;
         
         try {
             // Stop the program if reached end of video
-            if (frame.empty()) {
-                cout << "Done processing !!!" << endl;
-                cout << "Output file is stored as " << outputFile << endl;
-                waitKey(3000);
+            if (frame.empty()) 
+            {
+                std::cout << "Done processing !!!\n";
+                std::cout << "Output file is stored as " << outputFile << "\n";
+                cv::waitKey(3000);
                 break;
             }
 
-            vector<int> markerIds;
+            std::vector<int> markerIds;
             
             // Load the dictionary that was used to generate the markers.
-            Ptr<Dictionary> dictionary = getPredefinedDictionary(DICT_6X6_250);
+            cv::Ptr<cv::aruco::Dictionary>  dictionary = cv::aruco::getPredefinedDictionary( cv::aruco::DICT_6X6_250);
 
             // Declare the vectors that would contain the detected marker corners and the rejected marker candidates
-            vector<vector<Point2f>> markerCorners, rejectedCandidates;
+            std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
 
             // Initialize the detector parameters using default values
-            Ptr<DetectorParameters> parameters = DetectorParameters::create();
+            cv::Ptr<cv::aruco::DetectorParameters> parameters =  cv::aruco::DetectorParameters::create();
 
             // Detect the markers in the image
-            detectMarkers(frame, dictionary, markerCorners, markerIds, parameters, rejectedCandidates);
+            cv::aruco::detectMarkers(frame, dictionary, markerCorners, markerIds, parameters, rejectedCandidates);
 
             // Using the detected markers, locate the quadrilateral on the target frame where the new scene is going to be displayed.
-            vector<Point> pts_dst;
+            std::vector<cv::Point> pts_dst;
             float scalingFac = 0.02;//0.015;
 
-            Point refPt1, refPt2, refPt3, refPt4;
+            cv::Point refPt1, refPt2, refPt3, refPt4;
 
             // finding top left corner point of the target quadrilateral
             std::vector<int>::iterator it = std::find(markerIds.begin(), markerIds.end(), 25);
@@ -136,65 +139,66 @@ int main(int argc, char** argv)
             refPt2 = markerCorners.at(index).at(2);
             
             float distance = norm(refPt1-refPt2);
-            pts_dst.push_back(Point(refPt1.x - round(scalingFac*distance), refPt1.y - round(scalingFac*distance)));
+            pts_dst.push_back(cv::Point(refPt1.x - round(scalingFac*distance), refPt1.y - round(scalingFac*distance)));
             
-            pts_dst.push_back(Point(refPt2.x + round(scalingFac*distance), refPt2.y - round(scalingFac*distance)));
+            pts_dst.push_back(cv::Point(refPt2.x + round(scalingFac*distance), refPt2.y - round(scalingFac*distance)));
 
             // finding bottom right corner point of the target quadrilateral
             it = std::find(markerIds.begin(), markerIds.end(), 30);
             index = std::distance(markerIds.begin(), it);
             refPt3 = markerCorners.at(index).at(0);
-            pts_dst.push_back(Point(refPt3.x + round(scalingFac*distance), refPt3.y + round(scalingFac*distance)));
+            pts_dst.push_back(cv::Point(refPt3.x + round(scalingFac*distance), refPt3.y + round(scalingFac*distance)));
 
             // finding bottom left corner point of the target quadrilateral
             it = std::find(markerIds.begin(), markerIds.end(), 23);
             index = std::distance(markerIds.begin(), it);
             refPt4 = markerCorners.at(index).at(0);
-            pts_dst.push_back(Point(refPt4.x - round(scalingFac*distance), refPt4.y + round(scalingFac*distance)));
+            pts_dst.push_back(cv::Point(refPt4.x - round(scalingFac*distance), refPt4.y + round(scalingFac*distance)));
 
             // Get the corner points of the new scene image.
-            vector<Point> pts_src;
-            pts_src.push_back(Point(0,0));
-            pts_src.push_back(Point(im_src.cols, 0));
-            pts_src.push_back(Point(im_src.cols, im_src.rows));
-            pts_src.push_back(Point(0, im_src.rows));
+            std::vector<cv::Point> pts_src;
+            pts_src.push_back(cv::Point(0,0));
+            pts_src.push_back(cv::Point(im_src.cols, 0));
+            pts_src.push_back(cv::Point(im_src.cols, im_src.rows));
+            pts_src.push_back(cv::Point(0, im_src.rows));
 
             // Compute homography from source and destination points
-            Mat h = cv::findHomography(pts_src, pts_dst);
+            cv::Mat h = cv::findHomography(pts_src, pts_dst);
 
             // Warped image
-            Mat warpedImage;
+            cv::Mat warpedImage;
             
             // Warp source image to destination based on homography
-            warpPerspective(im_src, warpedImage, h, frame.size(), INTER_CUBIC);
+            cv::warpPerspective(im_src, warpedImage, h, frame.size(), cv::INTER_CUBIC);
         
             // Prepare a mask representing region to copy from the warped image into the original frame.
-            Mat mask = Mat::zeros(frame.rows, frame.cols, CV_8UC1);
-            fillConvexPoly(mask, pts_dst, Scalar(255, 255, 255), LINE_AA);
+            cv::Mat mask = cv::Mat::zeros(frame.rows, frame.cols, CV_8UC1);
+            cv::fillConvexPoly(mask, pts_dst, cv::Scalar(255, 255, 255), cv::LINE_AA);
             
             // Erode the mask to not copy the boundary effects from the warping
-            Mat element = getStructuringElement( MORPH_RECT, Size(5,5));
-//            Mat element = getStructuringElement( MORPH_RECT, Size(3,3));
+            cv::Mat element = cv::getStructuringElement( cv::MORPH_RECT, cv::Size(5,5));
+//            cv::Mat element = cv::getStructuringElement( MORPH_RECT, cv::Size(3,3));
             erode(mask, mask, element);
 
             // Copy the warped image into the original frame in the mask region.
-            Mat imOut = frame.clone();
+            cv::Mat imOut = frame.clone();
             warpedImage.copyTo(imOut, mask);
             
             // Showing the original image and the new output image side by side
-            Mat concatenatedOutput;
-            hconcat(frame, imOut, concatenatedOutput);
+            cv::Mat concatenatedOutput;
+            cv::hconcat(frame, imOut, concatenatedOutput);
             //imshow("zouma", concatenatedOutput);
-            waitKey(0);
-            if (parser.has("image")) imwrite(outputFile, concatenatedOutput);
+            cv::waitKey(0);
+            if (parser.has("image")) cv::imwrite(outputFile, concatenatedOutput);
             else video.write(concatenatedOutput);
 
-            imshow(kWinName, concatenatedOutput);
+            cv::imshow(kWinName, concatenatedOutput);
             
         }
-        catch(const std::exception& e) {
-            cout << endl << " e : " << e.what() << endl;
-            cout << "Could not do homography !! " << endl;
+        catch(const std::exception& e) 
+        {
+            std::cout << "\n e : " << e.what() << "\n";
+            std::cout << "Could not do homography !! \n";
     //        return 0;
         }
 

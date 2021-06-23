@@ -12,8 +12,8 @@
 [![Stack Overflow][stackoverflow-shield]][stackoverflow.com/users/11175375/adam]
 [![Leetcode][leetcode-shield]][eetcode.com/Hard_Code/]
 -->
-## Basic opencv image manipulation
-
+## Mouse Next Position Prediction 
+![mouse](https://user-images.githubusercontent.com/38358621/122943458-9fde1e80-d3a9-11eb-8de8-6e91af8ae3fe.png)
 <!-- TABLE OF CONTENTS -->
 <details open="open">
   <summary>Table of Contents</summary>
@@ -51,11 +51,8 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
-
-Read, show, clone image in opencv
-
+Mouse cursor position prediction.
 <!--Built with -->
 ### Built With
 
@@ -63,7 +60,6 @@ Read, show, clone image in opencv
 
 * [opencv](https://opencv.org/)
 * [cmake](https://cmake.org/)
-* [gnu](https://www.gnu.org/)
 
 <br>
 
@@ -77,26 +73,30 @@ Read, show, clone image in opencv
 
 ### Entire Files Structure 
 
-
 ```
 .
 ├── CMakeLists.txt
 ├── include
+│   ├── ConstantsMouse.h
+│   └── Mouse.h
 ├── README.md
-├── ressource
-│   └── happy.jpeg
 └── src
-    └── imageBasics.cpp
+    ├── demo
+    │   ├── CMakeLists.txt
+    │   └── demo.cpp
+    └── lib
+        ├── CMakeLists.txt
+        └── mouse
+            └── Mouse.cpp
 
-
-
+5 directories, 8 files
 ```
 
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is a sample code of how you may use  the opencv basic libs.
+This is a sample code of how you may use  the opencv libs to predict mouse position.
 To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
@@ -106,114 +106,93 @@ This is an example of how to list things you need to use the software and how to
   ```sh
   sudo apt-get install cmake
   ```
-* [Install](https://askubuntu.com/questions/342202/failed-to-load-module-canberra-gtk-module-but-already-installed) `gtk` and `gtk3` module to access `canberra-gtk-module` used by `opencv imshow`
- 
-  ```sh
-  sudo apt install libcanberra-gtk-module libcanberra-gtk3-module
-  ```
- * Install first `opencv4` cpp libraries 
 
-
+ * opencv4
  ```sh
- sudo apt-get update
- ```
- ```sh
- sudo apt-get upgrade
- ```
- 
- ```sh
- sudo apt-get install build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+ sudo su
  ```
  ```sh
- sudo apt-get install  python3-numpy libtbb2 libtbb-dev
- ```
- ```sh
- sudo apt-get install libjpeg-dev libpng-dev libtiff5-dev libdc1394-22-dev libeigen3-dev libtheora-dev libvorbis-dev libxvidcore-dev libx264-dev sphinx-common       libtbb-dev yasm libfaac-dev libopencore-amrnb-dev libopencore-amrwb-dev libopenexr-dev libgstreamer-plugins-base1.0-dev libavutil-dev libavfilter-dev             libavresample-dev
- ```
- 
- ```sh
- cd /opt
- ```
- ```sh
- git clone https://github.com/Itseez/opencv.git
- ```
- 
- ```sh
- git clone https://github.com/Itseez/opencv_contrib.git
- ```
- ```
- cd opencv
- ```
- ```
- mkdir release
- ```
- ```
- cd release
- ```
- 
- 
- ```sh
- cmake -D BUILD_TIFF=ON -D WITH_CUDA=OFF -D ENABLE_AVX=OFF -D WITH_OPENGL=OFF -D WITH_OPENCL=OFF -D WITH_IPP=OFF -D WITH_TBB=ON -D BUILD_TBB=ON 
- -D WITH_EIGEN=OFF   -D WITH_V4L=OFF -D WITH_VTK=OFF -D BUILD_TESTS=OFF -D BUILD_PERF_TESTS=OFF -D CMAKE_BUILD_TYPE=RELEASE 
- -D CMAKE_INSTALL_PREFIX=/usr/local -D    OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/modules /opt/opencv/
- ```
- ```
- make -j4
- ```
- ```
- make install
- ```
- ```
- ldconfig
- ```
- ```
- sudo apt install libopencv-dev
- ```
- check opencv path
- ```
- pkg-config --cflags opencv4
- ```
- check opencv libs
- ```
-  pkg-config --libs opencv4
- ```
- check opencv version
- ```
-  pkg-config --modversion opencv4
+git clone https://github.com/zoumson/OpencvInstall.git     \
+&& cd OpencvInstall && chmod +x install.sh && ./install.sh
  ```
 ### Installation
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/zoumson/Image.git
+   git clone https://github.com/zoumson/TrackMousePosition.git
    ```
 2. Go to the project directory source
    ```sh
-   cd Image
+   cd TrackMousePosition
    ```
-3. Create empty directories `build`, and `bin`
+3. Create empty directories 
    ```sh
-   mkdir build &&  mkdir bin 
+   mkdir build &&  mkdir bin && mkdir lib
    ```
-5. Generate the exectutable `imageBasics` and move it to `bin`
+5. Generate the exectutable and move it to `bin`
    ```sh
    cd build && cmake .. && make -j4 && cd ..
    ```
 
 <!-- USAGE EXAMPLES -->
 ### Usage
-1. Run for matrix usage 
-   ```sh
-   ./bin/imageBasics ./ressource/happy.jpeg
-   ```
-2. Output
-   ```sh
 
+2. Run the executable 
+ ```sh
+   ./bin/demo 
+```
+3. Output
+```sh
+current position        = (521, 470)
+next predicted position = (609, 450)
+--------------------------------------------------
+current position        = (591, 412)
+next predicted position = (672, 372)
+--------------------------------------------------
+current position        = (609, 354)
+next predicted position = (663, 303)
+--------------------------------------------------
+current position        = (589, 300)
+next predicted position = (610, 245)
+--------------------------------------------------
+current position        = (551, 280)
+next predicted position = (540, 238)
+--------------------------------------------------
+current position        = (441, 252)
+next predicted position = (383, 218)
+--------------------------------------------------
+current position        = (311, 248)
+next predicted position = (216, 229)
+--------------------------------------------------
+current position        = (179, 264)
+next predicted position = (61, 262)
+--------------------------------------------------
+current position        = (123, 286)
+next predicted position = (24, 296)
+--------------------------------------------------
+current position        = (55, 340)
+next predicted position = (-28, 371)
+--------------------------------------------------
+current position        = (35, 402)
+next predicted position = (-18, 449)
+--------------------------------------------------
+current position        = (61, 462)
+next predicted position = (46, 518)
+--------------------------------------------------
+current position        = (97, 484)
+next predicted position = (108, 529)
+--------------------------------------------------
+```
+4. Screen saved for `current position = (97, 484)` and `next predicted position = (108, 529)`
+   ```sh
+   White ===> Current mouse position
+   Red ===> Next predicted mouse position
    ```
 
-4. Back to the initial file structure configuration
+![Screen](https://user-images.githubusercontent.com/38358621/122940820-65738200-d3a7-11eb-85bf-a4184efcb06d.png)
+6. Back to the initial file structure configuration
    ```sh
-   rm -r bin build 
+   rm -r bin build result lib 
    ```
 <!-- ROADMAP -->
 ## Roadmap
@@ -245,7 +224,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Adama Zouma - <!-- [@your_twitter](https://twitter.com/your_username) -->- stargue49@gmail.com
 
-Project Link: [https://github.com/zoumson/Image](https://github.com/zoumson/Image.git)
+Project Link: [https://github.com/zoumson/TrackMousePosition](https://github.com/zoumson/TrackMousePosition.git)
 
 
 

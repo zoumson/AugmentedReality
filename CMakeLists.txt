@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 2.8.12)
 
-PROJECT(augmented)
-# PATH to OpenCV ( uncomment and provide path if required )
-# set(OpenCV_DIR /Users/visionifai/codes/installations/OpenCV4/lib/cmake/opencv4/)
+PROJECT(arcuro)
+
 #Set the compiler
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Release)
@@ -25,9 +24,6 @@ ENDIF()
 
 find_package( OpenCV REQUIRED )
 
-#set(CMAKE_CXX_STANDARD 11)
-#set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
-
 include_directories( ${OpenCV_INCLUDE_DIRS})
 
 MACRO(add_example name)
@@ -35,4 +31,4 @@ MACRO(add_example name)
   TARGET_LINK_LIBRARIES(${name} ${OpenCV_LIBS})
 ENDMACRO()
 
-add_example(augmented_reality_with_aruco)
+add_example(demo)
