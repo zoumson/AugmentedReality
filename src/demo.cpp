@@ -6,17 +6,13 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/calib3d.hpp>
-/*
-using namespace cv;
-using namespace aruco;
-using namespace std;
-*/
+
 int main(int argc, char** argv)
 {
 
    cv::String keys =
         "{o option |<none>           | 1 input is an image, 2 input is a video}" 
-        "{i image |           | old image path}"                           
+        "{i image |           | old image path}"                                           
         "{n new |./resource/image/new_scenery.jpg        | new image path}"                           
         "{v video |           | video path}"                           
         "{t output |./result/image/output.jpg          | output image}"                                                   
