@@ -87,7 +87,6 @@ Mouse cursor position prediction.
 └── src
     └── demo.cpp
 
-3 directories, 8 files
 
 ```
 
@@ -144,7 +143,7 @@ git clone https://github.com/zoumson/OpencvInstall.git     \
 
 ![test](https://user-images.githubusercontent.com/38358621/123138664-e30ebf00-d487-11eb-80ef-fc605b143b34.jpg)
 
-3. Image used to replace the existing scenaring in the square
+3. Image used to replace the existing landscape in the square
 
 ![me](https://user-images.githubusercontent.com/38358621/123144847-ba3df800-d48e-11eb-8f63-badc55b7f21f.jpg)
 
