@@ -67,7 +67,7 @@ Mouse cursor position prediction.
 
 ### Folders
 
-* [include/](include/): c++ header files.
+* [resource/](resource/): images.
 * [src/](src/): c++ definitions.
 
 
